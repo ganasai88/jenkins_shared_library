@@ -1,12 +1,10 @@
-def call(String credentialsId, String projectDir, String sonarProjectKey) {
-    withSonarQubeEnv(credentialsId: credentialsId) {
-        sh """
-            pylint ${projectDir} --output-format=html > pylint-report.html
-            sonar-scanner \
-            -Dsonar.projectKey=${sonarProjectKey} \
-            -Dsonar.sources=${projectDir} \
-            -Dsonar.python.pylint.reportPath=pylint-report.html \
-            -Dsonar.language=py
-        """
-    }
+
+def call(Map params) {
+    sh """
+        sonar-scanner \
+            -Dsonar.projectKey=${params.sonarProjectKey} \
+            -Dsonar.sources=${params.projectDir} \
+            -Dsonar.host.url=http://localhost:9000 \
+            -Dsonar.login=${params.sonarCredentialsId}
+    """
 }
